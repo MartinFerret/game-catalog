@@ -11,18 +11,20 @@ final class AppController {
             case 'home':
                 $this->home();
                 break;
+            case 'games':
+                $this->games();
+                break;
             default:
-                // Implement logic...
+                $this->notFound();
+                break;
         }
     }
 
-    private function render (string $view, array $data) : void {
+    private function render (string $view, array $data = []) : void {
         extract($data);
-
         require __DIR__ . '/../../views/partials/header.php'; // Header
         require __DIR__ . '/../../views/pages/' . $view . '.php';
         require __DIR__ . '/../../views/partials/footer.php'; // Footer
-
     }
 
     private function home() : void {
@@ -36,5 +38,20 @@ final class AppController {
             'featuredGames' => $featuresGames,
             'total' => count($games)
         ]);
+    }
+
+    private function games () : void {
+        $games = getAllGames();
+
+        usort($games, function ($a, $b) {
+            return $b['rating'] <=> $a['rating']; // DESC
+        });
+        $this->render('games', [
+            'games' => $games
+        ]);
+    }
+
+    private function notFound() : void {
+        $this->render('not-found');
     }
 }
