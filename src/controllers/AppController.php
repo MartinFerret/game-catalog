@@ -18,7 +18,11 @@ final class AppController {
 
     private function render (string $view, array $data) : void {
         extract($data);
+
+        require __DIR__ . '/../../views/partials/header.php'; // Header
         require __DIR__ . '/../../views/pages/' . $view . '.php';
+        require __DIR__ . '/../../views/partials/footer.php'; // Footer
+
     }
 
     private function home() : void {
