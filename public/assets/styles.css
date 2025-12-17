@@ -165,6 +165,68 @@ h1 {
     box-shadow: 0 4px 0 var(--shadow);
 }
 
+.error-404 {
+    margin-top: 24px;
+    display: flex;
+    justify-content: center;
+}
+
+.error-404__card {
+    width: 100%;
+    max-width: 720px;
+    position: relative;
+    overflow: hidden;
+}
+
+.error-404__card::before {
+    content: "";
+    position: absolute;
+    inset: -40px -40px auto auto;
+    width: 180px;
+    height: 180px;
+    background: radial-gradient(circle at 30% 30%, rgba(255,255,255,.45), rgba(255,255,255,0) 65%);
+    transform: rotate(18deg);
+    pointer-events: none;
+}
+
+.error-404__top {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 10px;
+}
+
+.error-404__title {
+    margin: 8px 0 6px;
+}
+
+.error-404__text {
+    max-width: 60ch;
+}
+
+.error-404__actions {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-top: 12px;
+}
+
+.error-404__hint {
+    margin-top: 14px;
+    padding-top: 12px;
+    border-top: 2px dashed rgba(0,0,0,.25);
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.error-404__mono {
+    font-size: 12px;
+    color: var(--ink-soft);
+}
+
+
 @media (max-width: 520px) {
     h1 {
         font-size: 22px;
