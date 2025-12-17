@@ -14,6 +14,9 @@ final class AppController {
             case 'games':
                 $this->games();
                 break;
+            case 'detail':
+                $this->gameById();
+                break;
             default:
                 $this->notFound();
                 break;
@@ -29,11 +32,13 @@ final class AppController {
 
     private function home() : void {
         // 1. Récupérer les 3 jeux.
-
         $games = getAllGames();
         $featuresGames = array_slice($games, 0, 3);
 
-        // 2. Rendre la vue.
+        // 2. Renvoie du code response.
+        http_response_code(200);
+
+        // 3. Rendre la vue.
         $this->render('home', [
             'featuredGames' => $featuresGames,
             'total' => count($games)
@@ -46,12 +51,29 @@ final class AppController {
         usort($games, function ($a, $b) {
             return $b['rating'] <=> $a['rating']; // DESC
         });
+
+        http_response_code(200);
+
         $this->render('games', [
             'games' => $games
         ]);
     }
 
+    private function gameById () : void {
+        $id = (int)($_GET['id'] ?? 0);
+        $game = getGameById($id);
+
+        http_response_code(200);
+
+        $this->render('detail', [
+            'id' => $id,
+            'game' => $game
+        ]);
+    }
+
     private function notFound() : void {
+        http_response_code(404);
+
         $this->render('not-found');
     }
 }

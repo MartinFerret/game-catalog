@@ -17,3 +17,14 @@ function getAllGames() : array {
     // 4. Retourne les jeux.
     return is_array($data) ? $data : [];
 }
+
+function getGameById(int $id) : ?array {
+    foreach (getAllGames() as $gameById) {
+        if ((int)($gameById['id'] ?? 0) === $id) {
+            return $gameById;
+        }
+    }
+
+    return null;
+    // return array_find(getAllGames(), fn($gameById) => (int)($gameById['id'] ?? 0) === $id);
+}
