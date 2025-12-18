@@ -1,6 +1,6 @@
 <?php
 
-require_once __DIR__ . '/../helpers/games.php';
+require_once __DIR__ . '/../services/games.php';
 require_once __DIR__ . '/../helpers/debug.php';
 
 final class AppController {
@@ -31,26 +31,18 @@ final class AppController {
     }
 
     private function home() : void {
-        // 1. Récupérer les 3 jeux.
-        $games = getAllGames();
-        $featuresGames = array_slice($games, 0, 3);
+        $games = getLimitedGames(3);
 
-        // 2. Renvoie du code response.
         http_response_code(200);
 
-        // 3. Rendre la vue.
         $this->render('home', [
-            'featuredGames' => $featuresGames,
-            'total' => count($games)
+            'featuredGames' => $games,
+            'total' => countAll()
         ]);
     }
 
-    private function games () : void {
-        $games = getAllGames();
-
-        usort($games, function ($a, $b) {
-            return $b['rating'] <=> $a['rating']; // DESC
-        });
+    private function games() : void {
+        $games = getAllGamesSortedByRating();
 
         http_response_code(200);
 
