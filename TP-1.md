@@ -8,7 +8,7 @@ Depuis la **page Home**, permettre à l’utilisateur de cliquer sur un bouton *
 2. **Rediriger automatiquement** vers la page **détail** de ce jeu
 
 Ce TP permet de travailler :
-- le routing simple (`page=random`)
+- le routing simple (`/random`)
 - l’accès aux données via **PDO / Repository**
 - la **redirection HTTP**
 - une première règle métier
@@ -31,7 +31,7 @@ Les jeux sont stockés en base de données et accessibles via un Repository.
 
 ### 1️⃣ Ajouter une nouvelle route `random`
 - La route doit être accessible via l’URL :  
-  `/?page=random`
+  `/random`
 - Elle ne doit **pas afficher de vue**
 - Son rôle est uniquement de :
     - sélectionner un jeu aléatoire
@@ -59,7 +59,7 @@ Le Controller ne doit pas contenir de SQL.
     - rediriger vers la route de détail existante
 
 Exemple de destination :
-`/?page=detail&id=4`
+`/games/4`
 
 💡 **Hint important** :  
 La redirection doit être faite avec la fonction PHP **`header()`**, suivie de l’arrêt du script.
