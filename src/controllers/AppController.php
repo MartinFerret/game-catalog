@@ -19,7 +19,6 @@ final class AppController {
                 break;
             case '/random':
                 $this->random();
-                break;
             case '/games':
                 $this->games();
                 break;
@@ -29,7 +28,8 @@ final class AppController {
         }
     }
 
-    private function render (string $view, array $data = []) : void {
+    private function render (string $view, array $data = [], int $status = 200) : void {
+        http_response_code($status);
         extract($data);
         require __DIR__ . '/../../views/partials/header.php'; // Header
         require __DIR__ . '/../../views/pages/' . $view . '.php';
@@ -38,8 +38,6 @@ final class AppController {
 
     private function home() : void {
         $games = getLimitedGames(3);
-
-        http_response_code(200);
 
         $this->render('home', [
             'featuredGames' => $games,
@@ -50,8 +48,6 @@ final class AppController {
     private function games() : void {
         $games = getAllGamesSortedByRating();
 
-        http_response_code(200);
-
         $this->render('games', [
             'games' => $games
         ]);
@@ -60,7 +56,6 @@ final class AppController {
     private function gameById (int $id) : void {
         $game = getGameById($id);
 
-        http_response_code(200);
         $this->render('detail', [
             'id' => $id,
             'game' => $game
@@ -68,9 +63,7 @@ final class AppController {
     }
 
     private function notFound() : void {
-        http_response_code(404);
-
-        $this->render('not-found');
+        $this->render('not-found', [], 404);
     }
 
     #[NoReturn]
