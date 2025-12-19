@@ -1,5 +1,7 @@
 <?php
 
+use JetBrains\PhpStorm\NoReturn;
+
 require_once __DIR__ . '/../services/games.php';
 require_once __DIR__ . '/../helpers/debug.php';
 
@@ -14,6 +16,9 @@ final class AppController {
         switch ($path) {
             case '/':
                 $this->home();
+                break;
+            case '/random':
+                $this->random();
                 break;
             case '/games':
                 $this->games();
@@ -56,7 +61,6 @@ final class AppController {
         $game = getGameById($id);
 
         http_response_code(200);
-
         $this->render('detail', [
             'id' => $id,
             'game' => $game
@@ -67,5 +71,25 @@ final class AppController {
         http_response_code(404);
 
         $this->render('not-found');
+    }
+
+    #[NoReturn]
+    private function random() : void {
+        $lastId = $_SESSION['last_random_id'] ?? 0;
+        $game = null;
+
+        for ($i = 0; $i < 5; $i++) {
+            $candidate = getRandomGame();
+
+            if ($candidate['id'] !== $lastId) {
+                $game = $candidate;
+            }
+        }
+
+        $id = $game['id'];
+        $_SESSION['last_random_id'] = $id;
+
+        header('Location: /games/' . $id, true, 302);
+        exit;
     }
 }

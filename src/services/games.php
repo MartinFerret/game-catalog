@@ -26,3 +26,7 @@ function countAll() : int {
 function getGameById(int $id) : ?array {
     return gameRepository()->findById($id);
 }
+
+function getRandomGame() {
+    return gameRepository()->findRandom();
+}

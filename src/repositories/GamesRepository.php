@@ -31,4 +31,9 @@ readonly final class GamesRepository {
         $sql = $this->pdo->query("SELECT COUNT(*) FROM games");
         return $sql->fetch(PDO::FETCH_COLUMN);
     }
+
+    public function findRandom() {
+        $sql = $this->pdo->query("SELECT * FROM games ORDER BY RAND() LIMIT 1");
+        return $sql->fetch(PDO::FETCH_ASSOC);
+    }
 }
