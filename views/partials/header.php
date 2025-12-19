@@ -15,6 +15,7 @@
         <nav class="nav">
             <a class="nav__link" href="/">Home</a>
             <a class="nav__link" href="/games">Games</a>
+            <a class="nav__link" href="/add">Add Game</a>
         </nav>
     </div>
 </header>

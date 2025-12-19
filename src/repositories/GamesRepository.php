@@ -36,4 +36,19 @@ readonly final class GamesRepository {
         $sql = $this->pdo->query("SELECT * FROM games ORDER BY RAND() LIMIT 1");
         return $sql->fetch(PDO::FETCH_ASSOC);
     }
+
+    public function createGame(array $data) : int {
+        $sql = $this->pdo->prepare("INSERT INTO games (title, platform, genre, releaseYear, rating, description, notes) VALUES (:title, :platform, :genre, :releaseYear, :rating, :description, :notes)");
+        $sql->execute([
+            'title' => $data['title'],
+            'platform' => $data['platform'],
+            'genre' => $data['genre'],
+            'releaseYear' => $data['releaseYear'],
+            'rating' => $data['rating'],
+            'description' => $data['description'],
+            'notes' => $data['notes']
+        ]);
+
+        return $this->pdo->lastInsertId();
+    }
 }

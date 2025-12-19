@@ -30,3 +30,7 @@ function getGameById(int $id) : ?array {
 function getRandomGame() {
     return gameRepository()->findRandom();
 }
+
+function createGame(array $data) : int {
+    return gameRepository()->createGame($data);
+}

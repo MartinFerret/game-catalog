@@ -12,13 +12,13 @@
         </p>
 
         <div class="error-404__actions">
-            <a class="btn" href="/?page=home">Back Home</a>
-            <a class="btn btn--alt" href="/?page=games">Browse Games</a>
+            <a class="btn" href="/home">Back Home</a>
+            <a class="btn btn--alt" href="/games">Browse Games</a>
         </div>
 
         <div class="error-404__hint">
             <span class="badge">Tip</span>
-            <span class="error-404__mono">Try: /?page=home, /?page=games, /?page=detail&id=1</span>
+            <span class="error-404__mono">Try: /home, /games, /games/1</span>
         </div>
     </div>
 </section>

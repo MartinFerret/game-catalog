@@ -19,6 +19,9 @@ final class AppController {
                 break;
             case '/random':
                 $this->random();
+            case '/add':
+                $this->add();
+                break;
             case '/games':
                 $this->games();
                 break;
@@ -56,9 +59,12 @@ final class AppController {
     private function gameById (int $id) : void {
         $game = getGameById($id);
 
+        $success = $_SESSION['flash_success'] ?? null;
+        unset($_SESSION['flash_success']);
         $this->render('detail', [
             'id' => $id,
-            'game' => $game
+            'game' => $game,
+            'success' => $success
         ]);
     }
 
@@ -83,6 +89,55 @@ final class AppController {
         $_SESSION['last_random_id'] = $id;
 
         header('Location: /games/' . $id, true, 302);
+        exit;
+    }
+
+    private function add(): void {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $this->handleAddGame();
+            return;
+        }
+
+        $this->render('add', []);
+    }
+
+    private function handleAddGame() : void {
+        $title = trim($_POST['title']);
+        $platform = trim($_POST['platform']);
+        $genre = trim($_POST['genre']);
+        $releaseYear = (int)($_POST['releaseYear']);
+        $rating = (int)($_POST['rating']);
+        $description = trim($_POST['description']);
+        $notes = trim($_POST['notes']);
+
+        $errors = [];
+
+        if ($title === '') $errors['title'] = 'Title should not be empty';
+        if ($platform === '') $errors['platform'] = 'Platform should not be empty';
+        if ($genre === '') $errors['genre'] = 'Genre should not be empty';
+        if ($rating < 0 || $rating > 10) $errors['rating'] = 'Rating should be between 0 and 10';
+        if ($releaseYear < 1800 || $releaseYear > (int)date('Y')) $errors['releaseYear'] = 'Release year should be between 1800 and 2025';
+        if ($description === '') $errors['description'] = 'Description should not be empty';
+        if ($notes === '') $errors['notes'] = 'Note should not be empty';
+
+        $old = [
+            'title' => $title,
+            'platform' => $platform,
+            'genre' => $genre,
+            'releaseYear' => $releaseYear,
+            'rating' => $rating,
+            'description' => $description,
+            'notes' => $notes
+        ];
+
+        if (!empty($errors)) {
+            $this->render('add', ['old' => $old, 'errors' => $errors], 422);
+            return;
+        }
+
+        $newGameId = createGame($old);
+        $_SESSION['flash_success'] = 'Game added successfully';
+        header('Location: /games/' . $newGameId, true, 302);
         exit;
     }
 }
