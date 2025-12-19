@@ -13,8 +13,8 @@
     <div class="container topbar__inner">
         <a href="/"><strong class="brand">Game Catalog</strong></a>
         <nav class="nav">
-            <a class="nav__link" href="/?page=home">Home</a>
-            <a class="nav__link" href="/?page=games">Games</a>
+            <a class="nav__link" href="/">Home</a>
+            <a class="nav__link" href="/games">Games</a>
         </nav>
     </div>
 </header>
