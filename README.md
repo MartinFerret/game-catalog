@@ -121,7 +121,7 @@ getAllGamesSortedByRating()
 
 **Règle**
 
-Le service ne connaît ni $_GET, ni $_POST, ni le HTML.
+Le service ne connaît ni `$_GET`, ni `$_POST`, ni le HTML.
 
 ### 4. Controller (entrée HTTP)
 **Rôle**
@@ -159,4 +159,21 @@ et ne décide pas des règles métier.
 | GET     | `/games`      | `games()`      | Liste des jeux               |
 | GET     | `/games/{id}` | `gameById()`   | Affiche les détails d'un jeu |
 | *       | autre         | `notFound()`   | Page 404                     |
+
+## Namespaces et `use`
+
+Le projet utilise des **namespaces** pour organiser le code et éviter les collisions de noms.  
+La convention est simple : **namespace = chemin de dossier dans `src/`**.
+
+- `namespace Core;` → `src/Core/...`
+- `namespace App\Controller;` → `src/App/Controller/...`
+
+Pour utiliser une classe, on l’importe avec `use` (ou on utilise son nom complet).
+
+Exemples :
+- Import : `use Core\Session;`
+- Utilisation : `new Session();`
+
+Sans import, il faut écrire le nom complet :
+- `new \Core\Session();`
 
