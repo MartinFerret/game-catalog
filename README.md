@@ -11,6 +11,47 @@
 Par convention, le fichier doit s'appeler `docker-compose.yml` ou `compose.yml`. Il utilise le YAML.
 Pour ajouter des dépendances, il faut utiliser le fichier `Dockerfile`.
 
+## Architecture MVC
+
+Le MVC permet de **séparer clairement les responsabilités** dans l’application.
+
+---
+
+### Controller
+Point d’entrée de la requête HTTP.  
+Il reçoit l’action de l’utilisateur, appelle le modèle et choisit la vue à afficher.
+
+---
+
+### Model
+Cœur de l’application.  
+Il gère les données et la logique métier, sans connaître l’HTTP ni l’affichage.
+
+---
+
+### View
+Partie visible par l’utilisateur.  
+Elle affiche les données sans logique métier ni accès aux données.
+
+---
+
+### Fonctionnement
+
+1. L’utilisateur fait une requête
+2. Le Controller la reçoit
+3. Le Model traite les données
+4. La View affiche le résultat
+
+---
+
+### Règle d’or
+
+- HTTP → Controller
+- Métier / données → Model
+- Affichage → View
+
+Chaque couche reste à sa place.
+
 ## Circulation des données
 
 | Couche     | Fait du SQL | Connait HTTP | Logique métier |
@@ -106,4 +147,16 @@ addGame()
 
 Le contrôleur ne fait pas de SQL
 et ne décide pas des règles métier.
+
+## 5. Routes de l’application
+
+| Méthode | URL           | Action appelée | Description                  |
+|---------|---------------|----------------|------------------------------|
+| GET     | `/`           | `home()`       | Page d’accueil               |
+| GET     | `/random`     | `random()`     | Affiche un jeu aléatoire     |
+| GET     | `/add`        | `add()`        | Formulaire d’ajout d’un jeu  |
+| POST    | `/add`        | `handleAddGame()`        | Ajout formulaire             |
+| GET     | `/games`      | `games()`      | Liste des jeux               |
+| GET     | `/games/{id}` | `gameById()`   | Affiche les détails d'un jeu |
+| *       | autre         | `notFound()`   | Page 404                     |
 
