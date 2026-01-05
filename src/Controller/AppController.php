@@ -4,13 +4,16 @@ namespace Controller;
 
 use JetBrains\PhpStorm\NoReturn;
 use Core\Response;
+use Repository\GamesRepository;
 
-require_once __DIR__ . '/../services/games.php';
-require_once __DIR__ . '/../helpers/debug.php';
+require_once __DIR__ . '/../Helper/Debug.php';
 
 final readonly class AppController {
 
-    public function __construct(private Response $response) {}
+    public function __construct(
+        private Response $response,
+        private GamesRepository $gamesRepository,
+    ) {}
     public function handleRequest (string $path) : void {
 
         if (preg_match('#^/games/(\d+)$#', $path, $m)) {
@@ -37,16 +40,16 @@ final readonly class AppController {
     }
 
     private function home() : void {
-        $games = getLimitedGames(3);
+        $games = $this->gamesRepository->findTop(3);
 
         $this->response->render('home', [
             'featuredGames' => $games,
-            'total' => countAll()
+            'total' => $this->gamesRepository->countAll()
         ]);
     }
 
     private function games() : void {
-        $games = getAllGamesSortedByRating();
+        $games = $this->gamesRepository->findAllSortedByRating();
 
         $this->response->render('games', [
             'games' => $games
@@ -54,7 +57,7 @@ final readonly class AppController {
     }
 
     private function gameById (int $id) : void {
-        $game = getGameById($id);
+        $game = $this->gamesRepository->findById($id);
 
         $success = $_SESSION['flash_success'] ?? null;
         unset($_SESSION['flash_success']);
@@ -75,7 +78,7 @@ final readonly class AppController {
         $game = null;
 
         for ($i = 0; $i < 5; $i++) {
-            $candidate = getRandomGame();
+            $candidate = $this->gamesRepository->findRandom();
 
             if ($candidate['id'] !== $lastId) {
                 $game = $candidate;
@@ -131,7 +134,7 @@ final readonly class AppController {
             return;
         }
 
-        $newGameId = createGame($old);
+        $newGameId = $this->gamesRepository->createGame($old);
         $_SESSION['flash_success'] = 'Game added successfully';
 
         $this->response->redirect('/games/' . $newGameId);
