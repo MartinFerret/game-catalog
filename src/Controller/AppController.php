@@ -3,11 +3,14 @@
 namespace Controller;
 
 use JetBrains\PhpStorm\NoReturn;
+use Core\Response;
 
 require_once __DIR__ . '/../services/games.php';
 require_once __DIR__ . '/../helpers/debug.php';
 
-final class AppController {
+final readonly class AppController {
+
+    public function __construct(private Response $response) {}
     public function handleRequest (string $path) : void {
 
         if (preg_match('#^/games/(\d+)$#', $path, $m)) {
@@ -33,18 +36,10 @@ final class AppController {
         }
     }
 
-    private function render (string $view, array $data = [], int $status = 200) : void {
-        http_response_code($status);
-        extract($data);
-        require __DIR__ . '/../../views/partials/header.php'; // Header
-        require __DIR__ . '/../../views/pages/' . $view . '.php';
-        require __DIR__ . '/../../views/partials/footer.php'; // Footer
-    }
-
     private function home() : void {
         $games = getLimitedGames(3);
 
-        $this->render('home', [
+        $this->response->render('home', [
             'featuredGames' => $games,
             'total' => countAll()
         ]);
@@ -53,7 +48,7 @@ final class AppController {
     private function games() : void {
         $games = getAllGamesSortedByRating();
 
-        $this->render('games', [
+        $this->response->render('games', [
             'games' => $games
         ]);
     }
@@ -63,7 +58,7 @@ final class AppController {
 
         $success = $_SESSION['flash_success'] ?? null;
         unset($_SESSION['flash_success']);
-        $this->render('detail', [
+        $this->response->render('detail', [
             'id' => $id,
             'game' => $game,
             'success' => $success
@@ -71,7 +66,7 @@ final class AppController {
     }
 
     private function notFound() : void {
-        $this->render('not-found', [], 404);
+        $this->response->render('not-found', [], 404);
     }
 
     #[NoReturn]
@@ -90,8 +85,7 @@ final class AppController {
         $id = $game['id'];
         $_SESSION['last_random_id'] = $id;
 
-        header('Location: /games/' . $id, true, 302);
-        exit;
+        $this->response->redirect('/games/' . $id);
     }
 
     private function add(): void {
@@ -100,7 +94,7 @@ final class AppController {
             return;
         }
 
-        $this->render('add', []);
+        $this->response->render('add', []);
     }
 
     private function handleAddGame() : void {
@@ -133,13 +127,13 @@ final class AppController {
         ];
 
         if (!empty($errors)) {
-            $this->render('add', ['old' => $old, 'errors' => $errors], 422);
+            $this->response->render('add', ['old' => $old, 'errors' => $errors], 422);
             return;
         }
 
         $newGameId = createGame($old);
         $_SESSION['flash_success'] = 'Game added successfully';
-        header('Location: /games/' . $newGameId, true, 302);
-        exit;
+
+        $this->response->redirect('/games/' . $newGameId);
     }
 }
