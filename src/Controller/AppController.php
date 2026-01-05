@@ -19,32 +19,8 @@ final readonly class AppController {
         private Session $session,
         private Request $request,
     ) {}
-    public function handleRequest (string $path) : void {
 
-        if (preg_match('#^/games/(\d+)$#', $path, $m)) {
-            $this->gameById((int)$m[1]);
-            return;
-        }
-
-        switch ($path) {
-            case '/':
-                $this->home();
-                break;
-            case '/random':
-                $this->random();
-            case '/add':
-                $this->add();
-                break;
-            case '/games':
-                $this->games();
-                break;
-            default:
-                $this->notFound();
-                break;
-        }
-    }
-
-    private function home() : void {
+    public function home() : void {
         $games = $this->gamesRepository->findTop(3);
 
         $this->response->render('home', [
@@ -53,7 +29,7 @@ final readonly class AppController {
         ]);
     }
 
-    private function games() : void {
+    public function games() : void {
         $games = $this->gamesRepository->findAllSortedByRating();
 
         $this->response->render('games', [
@@ -61,7 +37,7 @@ final readonly class AppController {
         ]);
     }
 
-    private function gameById (int $id) : void {
+    public function gameById (int $id) : void {
         $game = $this->gamesRepository->findById($id);
         $success = $this->session->pullFlash('success');
         $this->response->render('detail', [
@@ -71,12 +47,12 @@ final readonly class AppController {
         ]);
     }
 
-    private function notFound() : void {
+    public function notFound() : void {
         $this->response->render('not-found', [], 404);
     }
 
     #[NoReturn]
-    private function random() : void {
+    public function random() : void {
         $lastId = $this->session->get('last_random_id') ?? null;
         $game = null;
 
@@ -95,7 +71,7 @@ final readonly class AppController {
         $this->response->redirect('/games/' . $id);
     }
 
-    private function add(): void {
+    public function add(): void {
         if ($this->request->isPost()) {
             $this->handleAddGame();
             return;
@@ -104,7 +80,7 @@ final readonly class AppController {
         $this->response->render('add', []);
     }
 
-    private function handleAddGame() : void {
+    public function handleAddGame() : void {
         $title = trim($this->request->post('title'));
         $platform = trim($this->request->post('platform'));
         $genre = trim($this->request->post('genre'));
