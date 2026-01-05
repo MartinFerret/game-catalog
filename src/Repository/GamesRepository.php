@@ -1,5 +1,9 @@
 <?php
 
+namespace Repository;
+
+use PDO;
+
 readonly final class GamesRepository {
     public function __construct(private readonly PDO $pdo) {}
 

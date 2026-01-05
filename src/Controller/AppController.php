@@ -1,5 +1,7 @@
 <?php
 
+namespace Controller;
+
 use JetBrains\PhpStorm\NoReturn;
 
 require_once __DIR__ . '/../services/games.php';

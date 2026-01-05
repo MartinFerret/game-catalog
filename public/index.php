@@ -1,8 +1,10 @@
 <?php
 
-session_start();
+use Controller\AppController;
 
-require_once __DIR__ . '/../src/controllers/AppController.php';
+session_start();
+require __DIR__ . '/../autoload.php';
+
 require_once __DIR__ . '/../src/helpers/debug.php';
 
 $path = $_SERVER['REQUEST_URI'];
