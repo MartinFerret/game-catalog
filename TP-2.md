@@ -10,8 +10,6 @@ Vous disposez d’un **backend PHP** (mini-framework maison) avec :
 - un repository connecté à une base de données MySQL
 - une gestion du JSON et du CORS déjà en place
 
-Vous disposez également d’un **projet Angular** vierge.
-
 ---
 
 ## Objectifs pédagogiques
