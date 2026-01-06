@@ -18,4 +18,13 @@ final class Response {
         header('Location:' . $to, true, $status);
         exit;
     }
+
+    public function json (mixed $data, int $status = 200) :void {
+        // 1. Définir le code HTTP de la réponse.
+        http_response_code($status);
+        // 2. Spécifier que ce sera au format JSON.
+        header('Content-Type: application/json; charset=utf-8');
+        // 3. Convertisse des données en json.
+        echo json_encode($data);
+    }
 }
