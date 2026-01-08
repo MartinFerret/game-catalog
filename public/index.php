@@ -24,6 +24,7 @@ $repository = new SalarieRepository(Database::makePdo($config['db']));
 
 
 
+
 $salarieApiController = new SalarieApiController($response, $repository, $session, $request);
 
 $registerRoutes = require __DIR__ . '/../config/routes.php';

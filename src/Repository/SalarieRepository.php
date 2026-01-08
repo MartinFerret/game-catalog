@@ -15,7 +15,7 @@ readonly final class SalarieRepository
     public function findById(int $id): ?array
     {
         $stmt = $this->pdo->prepare('SELECT * FROM Salarie WHERE id_salarie = :id');
-        $stmt->bindValue('id',$id,PDO::PARAM_INT);
+        $stmt->bindValue('id', $id, PDO::PARAM_INT);
         $stmt->execute();
         $salarie = $stmt->fetch(PDO::FETCH_ASSOC);
         return $salarie === false ? null : $salarie;
@@ -34,6 +34,49 @@ readonly final class SalarieRepository
         ]);
         return $this->pdo->lastInsertId();
     }
+    public function update(int $id, array $data): bool
+{
+    $fields = [];
+    $params = ['id' => $id];
+    if(empty($data)) {
+        return false;
+    }
+
     
+
+    foreach ($data as $field => $value) {
+        if ($field === 'role') {
+            $fields[] = "`role` = :role";
+        } else {
+            $fields[] = "$field = :$field";
+        }
+        $params[$field] = $value;
+    }
+
+    if (empty($fields)) {
+        return false;
+    }
+
+    $sql = sprintf(
+        'UPDATE Salarie SET %s WHERE id_salarie = :id',
+        implode(', ', $fields)
+    );
+
+    $stmt = $this->pdo->prepare($sql);
+    $stmt->execute($params);
+
+    return $stmt->rowCount() > 0;
+}
+
+
+public function deleteById(int $id): void
+{
+    $stmt = $this->pdo->prepare('DELETE FROM Salarie WHERE id_salarie = :id');
+    $stmt->execute(['id' => $id]);
+}
+
+
+
+
 
 }
