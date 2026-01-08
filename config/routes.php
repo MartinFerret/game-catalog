@@ -1,21 +1,21 @@
 <?php
 
-use Controller\AppController;
-use Controller\PingApiController;
+
 use Core\Request;
 use Core\Response;
 use Core\Router;
+use Controller\SalarieApiController;
+use Helper\Debug;
 
-return function (Router $router, AppController $controller, PingApiController $pingApiController) {
-    $router->get('/', [$controller, 'home']);
-    $router->get('/add', [$controller, 'add']);
-    $router->get('/games', [$controller, 'games']);
-    $router->get('/random', [$controller, 'random']);
-    $router->post('/add', [$controller, 'handleAddGame']);
-    $router->getRegex('#^/games/(\d+)$#', function (Request $req, Response $res, array $m) use ($controller) {
-        $controller->gameById((int)$m[1]);
+
+
+return function (Router $router, SalarieApiController $salarieApiController): void {
+    // Define your routes here in the future
+    $router->get('/api/salaries', [$salarieApiController, 'salaries']);
+    $router->getRegex('#^/api/salaries/(\d+)$#', function (Request $req, Response $res, array $m) use ($salarieApiController) {
+        $salarieApiController->salarieById($req, $res, (int)$m[1]);
     });
-
-    // Routes API.
-    $router->get('/api/ping', [$pingApiController, 'ping']);
+    $router->post('/api/salaries', [$salarieApiController, 'createSalarie']);
 };
+ 
+
