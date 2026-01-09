@@ -8,7 +8,6 @@ use Core\Response;
 
 return function (
     Router $router,
-    AppController $controller,
     PingApiController $pingApiController,
     TacheApiController $tacheApiController
 ) {
@@ -23,21 +22,21 @@ return function (
     // -------------------------
 
     // LISTE
-    $router->get('/taches', [$tacheApiController, 'index']);
+    $router->get('/api/taches', [$tacheApiController, 'index']);
 
     // CREATE
-    $router->post('/taches', [$tacheApiController, 'store']);
+    $router->post('/api/taches', [$tacheApiController, 'store']);
 
     // SHOW (regex)
-    $router->getRegex('#^/taches/(\d+)$#', function (Request $req, Response $res, array $m) use ($tacheApiController) {
+    $router->getRegex('#^/api/taches/(\d+)$#', function (Request $req, Response $res, array $m) use ($tacheApiController) {
         $tacheApiController->show($req, $res, (int)$m[1]);
     });
 
     // UPDATE (POST)
-    $router->post('/taches/update', [$tacheApiController, 'update']);
+    $router->post('/api/taches/update', [$tacheApiController, 'update']);
 
     // DELETE (POST)
-    $router->post('/taches/delete', [$tacheApiController, 'delete']);
+    $router->post('/api/taches/delete', [$tacheApiController, 'delete']);
 
 
 };
