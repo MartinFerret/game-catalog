@@ -1,32 +1,54 @@
 <?php
 
-use Controller\AppController;
 use Controller\PingApiController;
+use Controller\ProjectController;
+use Controller\ClientController;
+use Controller\AbsenceController;
+use Controller\SalarieApiController;
+use Controller\TacheApiController;
 use Core\Cors;
 use Core\Database;
-use Core\Request;
 use Core\Response;
-use Core\Router;
 use Core\Session;
-use Repository\GamesRepository;
+use Core\Request;
+use Core\Router;
+
+use Repository\ProjectsRepository;
+use Repository\ClientsRepository;
+use Repository\SalarieRepository;
+use Repository\TacheRepository;
 
 session_start();
 require __DIR__ . '/../autoload.php';
-
+$registerProjectRoutes = require __DIR__ . '/../config/projectRoutes.php';
+$registerClientsRoutes = require __DIR__ . '/../config/clientRoutes.php';
+$registerAbsenceRoutes = require __DIR__ . '/../config/absenceRoutes.php';
+$registerTachesRoutes = require __DIR__ . '/../config/tachesRoutes.php';
+$registerSalarieRoutes = require __DIR__ . '/../config/salarieRoutes.php';
 $config = require_once __DIR__ . '/../config/db.php';
 
-Cors::handle();
+Cors::Handle();
 
 $response = new Response();
 $session = new Session();
 $request = new Request();
 $router = new Router();
-$repository = new GamesRepository(Database::makePdo($config['db']));
 
-$appController = new AppController($response, $repository, $session, $request);
+$projectRepository = new ProjectsRepository(Database::makePdo($config['db']));
+$clientRepository = new ClientsRepository(Database::makePdo($config['db']));
+$tacheRepository = new TacheRepository(Database::makePdo($config['db']));
+$salarieRepository = new SalarieRepository(Database::makePdo($config['db']));
+
 $pingApiController = new PingApiController();
+$projectController = new ProjectController($response, $projectRepository, $session, $request);
+$clientController = new ClientController($response, $clientRepository, $session, $request);
+$absenceController = new AbsenceController(Database::makePdo($config['db']));
+$tacheApiController = new TacheApiController($response, $tacheRepository, $request);
+$salarieController = new SalarieApiController($response, $salarieRepository, $session, $request);
 
-$registerRoutes = require __DIR__ . '/../config/routes.php';
-$registerRoutes($router, $appController, $pingApiController);
+$registerProjectRoutes($router, $projectController, $pingApiController, $projectRepository);
+$registerClientsRoutes($router, $clientController, $pingApiController, $clientRepository);
+$registerAbsenceRoutes($router, $pingApiController, $absenceController);
+$registerTachesRoutes($router, $pingApiController, $tacheApiController, $tacheRepository);
+$registerSalarieRoutes($router, $salarieController);
 $router->dispatch($request, $response);
-
